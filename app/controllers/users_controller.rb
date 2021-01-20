@@ -41,21 +41,21 @@ class UsersController < ApplicationController
 
   private
 
-  def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
-  end
-
-  def logged_in_user
-    unless logged_in?
-      flash[:danger] = "Please log in."
-      store_location
-      redirect_to login_path
+    def user_params
+      params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
-  end
 
-  def correct_user
-    @user = User.find params[:id]
-    redirect_to root_path unless current_user? @user
-  end
+    def logged_in_user
+      unless logged_in?
+        flash[:danger] = "Please log in."
+        store_location
+        redirect_to login_path
+      end
+    end
+
+    def correct_user
+      @user = User.find params[:id]
+      redirect_to root_path unless current_user? @user
+    end
 
 end
