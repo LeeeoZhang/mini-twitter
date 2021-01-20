@@ -9,3 +9,8 @@ Leo2:
   name: Leo Cheung
   email: leo2@example.com
   password_digest: <%= User.digest 'password' %>
+
+Leo3:
+  name: Leo Cheung
+  email: leo3@example.com
+  password_digest: <%= User.digest 'password' %>
