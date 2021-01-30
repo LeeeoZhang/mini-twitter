@@ -16,11 +16,11 @@ class UsersEditTest < ActionDispatch::IntegrationTest
   end
 
   test 'successful edit' do
+    name = 'Edit_Leo'
+    email = 'edit@example.com'
     get edit_user_path @user
     log_in_as @user
     assert_redirected_to edit_user_path @user
-    name = 'Edit_Leo'
-    email = 'edit@example.com'
     patch user_path @user, params: { user: { name: name, email: email, password: '', password_confirmation: '' } }
     assert_not flash.empty?
     assert_redirected_to @user
