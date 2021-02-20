@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   root 'static_page#home'
   resources :users
   resources :account_activations, only: [:edit]
+  resources :password_resets, only: [:edit, :update, :create, :new]
   get '/help', to: 'static_page#help'
   get '/about', to: 'static_page#about'
   get '/contact', to: 'static_page#contact'

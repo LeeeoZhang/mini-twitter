@@ -2,7 +2,7 @@ class User < ApplicationRecord
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
 
-  attr_accessor :remember_token, :activation_token
+  attr_accessor :remember_token, :activation_token, :reset_token
 
   validates :name, presence: true, length: { maximum: 50 }
   validates :email, presence: true, length: { maximum: 255 }, format: { with: VALID_EMAIL_REGEX }, uniqueness: true
@@ -49,6 +49,20 @@ class User < ApplicationRecord
   def send_activation_email
     UserMailer.account_activation(self).deliver_now
   end
+
+  # 设置密码重置相关属性
+  def create_reset_digest
+    self.reset_token = User.new_token
+    update_columns reset_digest: User.digest(reset_token), reset_send_at: Time.zone.now
+  end
+
+  # 发送重置密码邮件
+  def send_password_reset_email
+    UserMailer.password_rest(self).deliver_now
+  end
+
+  # 重置密码是否过期
+
 
   private
 
