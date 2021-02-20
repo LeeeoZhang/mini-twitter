@@ -5,6 +5,7 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
   def setup
     @admin = users :Leo
     @non_admin = users :Leo2
+    @non_activate_user = users :Leo4
   end
 
   test 'index as admin including pagination and delete link' do
@@ -28,6 +29,20 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     log_in_as @non_admin
     get users_path
     assert_select 'a', text: 'delete', count: 0
+  end
+
+  test 'users should be activated' do
+    log_in_as @admin
+    get users_path
+    assert_template 'users/index'
+    assigns(:users).each do |user|
+      assert user.activated?
+    end
+  end
+
+  test 'should redirect to root if visit a not activate user' do
+    get user_path @non_activate_user
+    assert_redirected_to root_path
   end
 
 end

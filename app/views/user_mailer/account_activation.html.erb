@@ -1,0 +1,7 @@
+<h1>Mini Twitter</h1>
+
+<p>Hi <%= @user.name %>,</p>
+
+<p>Welcome to the Mini Twitter! Click on the link below to activate your account:</p>
+
+<%= edit_account_activation_url(@user.activation_token, email: @user.email) %>
