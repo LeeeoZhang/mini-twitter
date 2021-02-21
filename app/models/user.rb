@@ -62,7 +62,9 @@ class User < ApplicationRecord
   end
 
   # 重置密码是否过期
-
+  def password_reset_expired?
+    reset_send_at < 2.hours.ago
+  end
 
   private
 

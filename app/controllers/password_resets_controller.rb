@@ -13,23 +13,37 @@ class PasswordResetsController < ApplicationController
   end
 
   def create
-    @user = User.find_by(email: params[:password_resets][:email].downcase)
+    @user = User.find_by(email: params[:password_reset][:email].downcase)
     if @user
       @user.create_reset_digest
       @user.send_password_reset_email
       flash[:info] = 'Email sent with password reset instructions'
       redirect_to root_path
     else
-      flash.now[:danger] = "Email address not found."
+      flash.now[:danger] = 'Email address not found.'
       render 'new'
     end
   end
 
   def update
-
+    if params[:user][:password].empty? # 密码为空时
+      @user.errors.add(:password, "can't be empty")
+      render 'edit'
+    elsif @user.update(user_params) # 更新成功
+      @user.update_attribute(:reset_digest, nil)
+      flash[:success] = 'Password has been reset!'
+      redirect_to login_path
+    else
+      # 更新失败
+      render 'edit'
+    end
   end
 
   private
+
+    def user_params
+      params.require(:user).permit(:password, :password_confirmation)
+    end
 
     def get_user
       @user = User.find_by email: params[:email]
@@ -38,6 +52,7 @@ class PasswordResetsController < ApplicationController
     # 确保用户是有效的
     def valid_user
       unless @user && @user.activated? && @user.authenticated?(:reset, params[:id])
+        flash[:danger] = 'Invalid password reset link.'
         redirect_to root_url
       end
     end
@@ -49,5 +64,7 @@ class PasswordResetsController < ApplicationController
         redirect_to new_password_reset_path
       end
     end
+
+
 
 end
