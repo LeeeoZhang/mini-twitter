@@ -16,6 +16,7 @@ User.create!(
   activated_at: Time.zone.now,
 )
 
+# 生成测试用户
 99.times do |i|
   name = Faker::Name.name
   email = "example-#{i}@railstutorial.org"
@@ -28,4 +29,11 @@ User.create!(
     activated: true,
     activated_at: Time.zone.now,
   )
+end
+
+# 生成测试微博
+users = User.order(:created_at).take 6
+50.times do
+  content = Faker::Lorem.sentence word_count: 5
+  users.each { |user| user.microposts.create!(content: content) }
 end

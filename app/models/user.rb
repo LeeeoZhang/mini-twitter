@@ -1,6 +1,6 @@
 class User < ApplicationRecord
 
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i  # 验证邮箱
 
   has_many :microposts, dependent: :destroy
 
@@ -66,6 +66,11 @@ class User < ApplicationRecord
   # 重置密码是否过期
   def password_reset_expired?
     reset_send_at < 2.hours.ago
+  end
+
+  # 用户动态流
+  def feed
+    Micropost.where('user_id=?', id)
   end
 
   private
