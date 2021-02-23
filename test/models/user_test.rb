@@ -76,9 +76,20 @@ class UserTest < ActiveSupport::TestCase
   test 'associated microposts should be destroyed' do
     @admin.save
     @admin.microposts.create!(content: 'test content')
-    assert_difference 'Micropost.count',-1 do
+    assert_difference 'Micropost.count', -1 do
       @admin.destroy
     end
+  end
+
+  test 'should follow and unfollow a user' do
+    user1 = users :Leo
+    user2 = users :Leo2
+    assert_not user1.following? user2
+    user1.follow user2
+    assert user1.following? user2
+    assert user2.followers.include? user1
+    user1.unfollow user2
+    assert_not user1.following? user2
   end
 
 end

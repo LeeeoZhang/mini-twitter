@@ -1,8 +1,12 @@
 class User < ApplicationRecord
 
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i  # 验证邮箱
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i # 验证邮箱
 
-  has_many :microposts, dependent: :destroy
+  has_many :microposts, dependent: :destroy # 用户有许多微博
+  has_many :active_relationships, class_name: 'Relationship', foreign_key: 'follower_id', dependent: :destroy # 用户主动关系
+  has_many :following, through: :active_relationships, source: :followed # 我关注的人
+  has_many :passive_relationships, class_name: 'Relationship', foreign_key: 'followed_id', dependent: :destroy # 用户被动关系
+  has_many :followers, through: :passive_relationships, source: :follower # 关注我的人
 
   attr_accessor :remember_token, :activation_token, :reset_token
 
@@ -73,6 +77,21 @@ class User < ApplicationRecord
     Micropost.where('user_id=?', id)
   end
 
+  # 关注用户
+  def follow(other_user)
+    following << other_user
+  end
+
+  # 取消关注用户
+  def unfollow(other_user)
+    following.delete other_user
+  end
+
+  # 是否关注了某个用户
+  def following?(other_user)
+    following.include? other_user
+  end
+
   private
 
     def create_activation_digest
@@ -81,7 +100,7 @@ class User < ApplicationRecord
     end
 
     def downcase_email
-      self.email.downcase!
+      email.downcase!
     end
 
 end
