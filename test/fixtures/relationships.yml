@@ -1,16 +1,17 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 one:
   follower: Leo
-  followed: Leo2
+  followed: Leo3
 
 two:
   follower: Leo
-  followed: Leo3
-
-three:
-  follower: Leo
   followed: Leo4
 
+three:
+  follower: Leo4
+  followed: Leo
+
 four:
-  follower: Le2
+  follower: Leo2
   followed: Leo3
+
