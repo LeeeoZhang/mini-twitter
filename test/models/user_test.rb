@@ -92,4 +92,22 @@ class UserTest < ActiveSupport::TestCase
     assert_not user1.following? user2
   end
 
+  test 'feed should have right post' do
+    leo = users :Leo
+    leo2 = users :Leo2
+    leo3 = users :Leo3
+    # 关注用户的微博
+    leo3.microposts.each do |post|
+      assert leo.feed.include? post
+    end
+    # 自己的微博
+    leo.microposts.each do |post|
+      assert leo.feed.include? post
+    end
+    # 未关注用户的微博
+    leo2.microposts.each do |post|
+      assert_not leo.feed.include? post
+    end
+  end
+
 end
